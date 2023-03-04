@@ -2,14 +2,12 @@
 pragma solidity ^0.8.9;
 
 /*
-    @title Darate (crowdfunding platform)
+    @title Darate (A crowdfunding platform)
     @creator Afolabi Olajide Samuel (cipherr)
 */
 
-contract CrowdFunding {
-
-    uint256 maxCreatorCampaign = 1;
-
+contract Darate {
+    // @dev struct for the normal campaign
     struct Campaign{
         address owner;
         string title;
@@ -23,6 +21,7 @@ contract CrowdFunding {
         uint256[] donations;
     }
 
+    // @dev struct for creator campaign
     struct CreatorCampaign{
         address owner;
         string name;
@@ -36,7 +35,7 @@ contract CrowdFunding {
     mapping(uint256 => Campaign) public campaigns;
     mapping(uint256 => CreatorCampaign) public creatorCampaigns;
 
-    mapping(address => uint) public creatorCampaignAvailable;
+    mapping(address => bool) public creatorCampaignAvailable;
 
     uint256 numberOfCampaigns = 0;
     uint256 numberOfCreatorCampaigns = 0;
@@ -65,7 +64,7 @@ contract CrowdFunding {
     function createCreatorCampaign(address _owner, string memory _name, string memory _description, string memory _image) public returns (uint256) {
         CreatorCampaign storage creatorCampaign = creatorCampaigns[numberOfCreatorCampaigns];
 
-        require(creatorCampaignAvailable[msg.sender] == maxCreatorCampaign, "You have reached the maximun creator campaign created");
+        require(!creatorCampaignAvailable[msg.sender], "You have reached the maximun creator campaign created");
 
         creatorCampaign.owner = _owner;
         creatorCampaign.name = _name;
@@ -73,7 +72,7 @@ contract CrowdFunding {
         creatorCampaign.amountCollected = 0;
         creatorCampaign.image = _image;
 
-        creatorCampaignAvailable[msg.sender]++;
+        creatorCampaignAvailable[msg.sender] = true;
         numberOfCreatorCampaigns++;
 
         return numberOfCreatorCampaigns - 1;
@@ -145,10 +144,5 @@ contract CrowdFunding {
         }
 
         return allCampaigns;
-    }
-
-    // @dev update functions 
-    function updateMaxCreatorcampaign(uint256 _max) public {
-        maxCreatorCampaign = _max;
     }
 }

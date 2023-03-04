@@ -9,7 +9,7 @@ module.exports = {
         accounts: [`0x${process.env.PRIVATE_KEY}`],
       },
       fantom: {
-        rpc: "",
+        rpc: "https://rpc.ankr.com/fantom/",
         accounts: [`0x${process.env.PRIVATE_KEY}`], 
       }
     },
